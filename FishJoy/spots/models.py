@@ -1,0 +1,121 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from django.urls import reverse
+
+# https://www.sankalpjonna.com/learn-django/the-right-way-to-use-a-manytomanyfield-in-django
+# create baits page +
+# update buttons design +
+# make adequate separators, like peas, worm, lure +
+# picture height +
+# decorate headers(titles) +
+# create DetailView, show full location information +
+# create the best logo ever
+# create page which shows all locations where lives one exact fish, I click the button, 'see locations', on fish page \
+# \ and there will be redirection on new page with all locations that have this exact fish +
+
+
+class Spots(models.Model):
+    title = models.CharField(max_length=50, verbose_name='Spot name')
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+    rating = models.IntegerField(default=1, validators=[MaxValueValidator(10), MinValueValidator(1)])
+    location = models.CharField(max_length=50)
+    photo = models.ImageField(upload_to="photos/spot/%Y/%m/%d/")
+    max_depth = models.FloatField(validators=[MaxValueValidator(10000), MinValueValidator(1)], verbose_name='Max depth')
+    fish = models.ManyToManyField('Fish', symmetrical=False)
+    spot_category = models.ForeignKey('SpotCategory', on_delete=models.PROTECT)
+    time_create = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    def class_name(self):
+        return self.__class__.__name__
+
+    def get_absolute_url(self):
+        return reverse('spot', kwargs={'spot_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Spot'
+        verbose_name_plural = 'Spots'
+        ordering = ['title']
+
+
+class Fish(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Fish name')
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+    photo = models.ImageField(upload_to="photos/fish/%Y/%m/%d/")
+    average_weight = models.FloatField(validators=[MaxValueValidator(200.0), MinValueValidator(0.1)], verbose_name='Average weight')
+    baits = models.ManyToManyField('Baits', symmetrical=False)
+    fish_category = models.ForeignKey('FishCategory', on_delete=models.PROTECT)
+    time_create = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    def class_name(self):
+        return self.__class__.__name__
+
+    def get_absolute_url(self):
+        return reverse('single_fish', kwargs={'single_fish_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Fish'
+        verbose_name_plural = 'Fish'
+        ordering = ['name']
+
+
+class Baits(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Bait name')
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+    photo = models.ImageField(upload_to="photos/baits/%Y/%m/%d/")
+    price = models.FloatField(validators=[MaxValueValidator(100000), MinValueValidator(0)])
+    time_create = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    def class_name(self):
+        return self.__class__.__name__
+
+    # def get_absolute_url(self):
+    #     return reverse('bait', kwargs={'bait_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Bait'
+        verbose_name_plural = 'Baits'
+        ordering = ['name']
+
+
+class SpotCategory(models.Model):
+    name = models.CharField(max_length=50, db_index=True, verbose_name='Spot category')
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('spots_category', kwargs={'spots_category_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Spot category'
+        verbose_name_plural = 'Spot categories'
+        ordering = ['name']
+
+
+class FishCategory(models.Model):
+    name = models.CharField(max_length=50, db_index=True, verbose_name='Fish category')
+    slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='URL')
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('fish_category', kwargs={'fish_category_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Fish category'
+        verbose_name_plural = 'Fish categories'
+        ordering = ['name']

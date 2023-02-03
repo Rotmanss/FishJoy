@@ -1,0 +1,40 @@
+{% extends 'spots/base.html' %}
+
+{% block add %}<a href="{% url 'add_fish' %}">Add fish</a>{% endblock %}
+
+{% block sidebar %}
+    <header>Categories</header>
+    {% for c in fish_category %}
+        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+<ul class="list-articles">
+    {% for f in fish %}
+    <li>
+        <div class="article-panel">
+            <p class="last">Updated on: {{f.time_update|date:"d-m-Y H:i:s"}}</p>
+        </div>
+
+        {% if f.photo %}
+            <p><img class="article-image" src="{{ f.photo.url }}" alt="Fish photo"></p>
+        {% endif %}
+
+        <h2 class="title">{{ f.name|capfirst }}</h2>
+
+        {% autoescape on %}
+            <p class="description"><i>Type:</i> {{ f.fish_category.name|lower }}</p>
+            <p class="description"><i>Average weight:</i> {{ f.average_weight|floatformat }} kilogram{{ f.average_weight|floatformat|pluralize }}</p>
+            <p class="description"><i>Baits:</i> {{ f.baits.all|join:", "|lower }}</p>
+            <p class="description"><i>Possible to catch on:</i> {{ f.spots_set.all|join:", "|truncatechars:200 }}</p>
+	    {% endautoescape %}
+
+        <div class="clear"></div>
+        <p class="link-read-post"><a href="{{ f.get_absolute_url }}">See full information</a></p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

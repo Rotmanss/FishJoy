@@ -1,0 +1,29 @@
+{% extends 'spots/base.html' %}
+
+{% block add %}<a href="{% url 'add_bait' %}">Add bait</a>{% endblock %}
+
+{% block content %}
+
+<ul class="list-articles">
+    {% for b in baits %}
+    <li>
+        <div class="article-panel">
+            <p class="last">Updated on: {{b.time_update|date:"d-m-Y H:i:s"}}</p>
+        </div>
+
+        {% if b.photo %}
+            <p><img class="article-image" src="{{ b.photo.url }}" alt="Bait photo"></p>
+        {% endif %}
+
+        <h2 class="title">{{ b.name|capfirst }}</h2>
+
+        {% autoescape on %}
+            <p class="description"><i>Price:</i> {{ b.price|floatformat }}$</p>
+	    {% endautoescape %}
+
+        <div class="clear"></div>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

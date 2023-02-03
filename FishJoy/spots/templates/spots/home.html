@@ -1,0 +1,38 @@
+{% extends 'spots/base.html' %}
+
+{% block sidebar %}
+    <header>Categories</header>
+    {% for c in spots_category %}
+        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+<ul class="list-articles">
+    {% for s in spots %}
+    <li>
+        <div class="article-panel">
+            <p class="first">Rating: {{ s.rating }} / 10</p>
+            <p class="last">Updated on: {{s.time_update|date:"d-m-Y H:i:s"}}</p>
+        </div>
+
+        {% if s.photo %}
+            <p><img class="article-image" src="{{ s.photo.url }}" alt="Spot photo"></p>
+        {% endif %}
+
+        <h2 class="title">{{ s.title|capfirst }}</h2>
+
+        {% autoescape on %}
+            <p class="description"><i>Location:</i> {{ s.location }}</p>
+            <p class="description"><i>Fish</i>: {{ s.fish.all|join:", "|lower}}</p>
+            <p class="description"><i>The deepest point</i>: {{ s.max_depth|floatformat }} meter{{ s.max_depth|floatformat|pluralize }}</p>
+	    {% endautoescape %}
+
+        <div class="clear"></div>
+        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">See full information</a></p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

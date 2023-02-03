@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  spots_db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: asdasd123123
+      POSTGRES_DB: spots
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+  web:
+    container_name: spots_web
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: bash -c "python /code/manage.py migrate --noinput &&
+             python /code/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - spots_db
+volumes:
+  postgres_data:
+  

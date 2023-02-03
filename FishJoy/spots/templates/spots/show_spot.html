@@ -1,0 +1,36 @@
+{% extends 'spots/base.html' %}
+
+{% block content %}
+
+<h1 class="single-spot">{{ spot.title }}</h1>
+
+{% if spot.photo %}
+    <p><img class="single-spot-photo" src="{{ spot.photo.url }}" alt="Spot photo"></p>
+{% endif %}
+
+{% autoescape on %}
+    <p class="single-spot-description"><i>Location:</i> {{ spot.location }}</p>
+    <p class="single-spot-description"><i>The deepest point</i>: {{ spot.max_depth|floatformat }} meter{{ spot.max_depth|floatformat|pluralize }}</p>
+{% endautoescape %}
+
+<table class="spot-table">
+    <caption><h1>Here you can catch these fish:</h1></caption>
+    <tr>
+        <th>Fish name</th>
+        <th>Fish photo</th>
+        <th>Fish type</th>
+        <th>Fish average weight in kilograms</th>
+    </tr>
+    {% for f in spot.fish.all %}
+        {% if f.photo %}
+            <tr>
+                <td><p><p><a href="{{ f.get_absolute_url }}">{{ f.name|capfirst }}</a></p></p></td>
+                <td><img class="article-image" src="{{ f.photo.url }}" alt="Fish photo"></td>
+                <td><p>{{ f.fish_category.name|lower }}</p></td>
+                <td><p>{{ f.average_weight|floatformat }}</p></td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+
+{% endblock %}

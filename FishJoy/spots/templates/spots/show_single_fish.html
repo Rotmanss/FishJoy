@@ -1,0 +1,53 @@
+{% extends 'spots/base.html' %}
+
+{% block add %}<a href="{% url 'add_fish' %}">Add fish</a>{% endblock %}
+
+{% block content %}
+
+<h1 class="single-spot">{{ fish.name }}</h1>
+
+{% if fish.photo %}
+    <p><img class="single-spot-photo" src="{{ fish.photo.url }}" alt="Fish photo"></p>
+{% endif %}
+
+{% autoescape on %}
+    <p class="single-spot-description"><i>Type:</i> {{ fish.fish_category.name|lower }}</p>
+    <p class="single-spot-description"><i>Average weight:</i> {{ fish.average_weight|floatformat }} kilogram{{ fish.average_weight|floatformat|pluralize }}</p>
+{% endautoescape %}
+
+<table class="fish-table">
+    <caption><h1>Good baits for {{ fish.name|lower }}:</h1></caption>
+    <tr>
+        <th>Bait name</th>
+        <th>Bait photo</th>
+        <th>Bait price</th>
+    </tr>
+    {% for b in fish.baits.all %}
+        {% if b.photo %}
+            <tr>
+                <td><p>{{ b.name|capfirst }}</p></td>
+                <td><img class="article-image" src="{{ b.photo.url }}" alt="Fish photo"></td>
+                <td><p>{{ b.price|floatformat }}$</p></td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+
+<table class="spot-reverse-table">
+    <caption><h1>You can catch {{ fish.name|lower }} on:</h1></caption>
+    <tr>
+        <th>Location name</th>
+        <th>Location photo</th>
+    </tr>
+    {% for s in fish.spots_set.all %}
+        {% if s.photo %}
+            <tr>
+                <td><p><a href="{{ s.get_absolute_url }}">{{ s.title|capfirst }}</a></p></td>
+                <td><img class="article-image" src="{{ s.photo.url }}" alt="Fish photo"></td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+<div class="clear"></div>
+
+{% endblock %}

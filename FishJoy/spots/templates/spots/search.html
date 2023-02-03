@@ -1,0 +1,27 @@
+{% extends 'spots/base.html' %}
+
+{% block content %}
+
+{% if data %}
+    <ul>
+        {% for d in data %}
+            {% if d.class_name == 'Baits' %}
+                <li><p class="searched-data"><a href="{% url 'baits' %}">
+                    ...{{ d.name }}, {{ d.price|floatformat }}$...
+                </a></p></li>
+            {% elif d.class_name == 'Spots' %}
+                <li><p class="searched-data"><a href="{{ d.get_absolute_url }}">
+                    ...{{ d.title }}, rating: {{ d.rating}}, {{ d.location }}, depth: {{ d.max_depth|floatformat }}m...
+                </a></p></li>
+            {% elif d.class_name == 'Fish' %}
+                <li><p class="searched-data"><a href="{{ d.get_absolute_url }}">
+                    ...{{ d.name }}, weight: {{ d.average_weight|floatformat }}kg...
+                </a></p></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Nothing was found by your query</p>
+{% endif %}
+
+{% endblock %}

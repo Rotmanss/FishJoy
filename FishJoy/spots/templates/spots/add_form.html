@@ -1,0 +1,29 @@
+{% extends 'spots/base.html' %}
+
+{% block content %}
+<h1>{{ title }}</h1><br>
+
+{% if not request.user.is_authenticated %}
+    <p class="add-auth">You have to be logged in, if you want to {{ title|lower }}! <a href="{% url 'login' %}">Login</a></p>
+    <p class="add-auth">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+{% else %}
+<form method="post" enctype="multipart/form-data" lang="en">
+    {% csrf_token %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+    {% for f in form %}
+        {% if f.label == 'Rating' %}
+            <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: * </label>{{ f }} where 1 - the worst, 10 - the best</p>
+        {% elif f.label == 'URL' %}
+            <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: * </label>{{ f }} the way you want to represent your page, example: .../.../URL</p>
+        {% else %}
+            <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: * </label>{{ f }}</p>
+        {% endif %}
+        <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+
+    <button type="submit" class="form-button">Commit</button>
+</form>
+{% endif %}
+{% endblock %}

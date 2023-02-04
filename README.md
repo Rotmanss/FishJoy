@@ -1,5 +1,5 @@
 # FishJoy
-This website was created to help fishers from all over the world to get important information about particular
+This website was created to help fishermen from all over the world to get important information about particular
 spot, fish on this spot and of course the best baits for fish that you want to catch.
 
 You can divide fish and spots on particular categories, like peaceful or predatory, river or lake respectively etc.

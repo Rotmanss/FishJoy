@@ -2,6 +2,14 @@ from django.urls import include, path, re_path
 
 from .views import *
 
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'spots', SpotsViewSet)
+router.register(r'fish', FishViewSet)
+router.register(r'baits', BaitsViewSet)
+
+
 urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('fish/', ShowFish.as_view(), name='fish'),
                path('baits/', ShowBaits.as_view(), name='baits'),
@@ -16,5 +24,7 @@ urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('register/', RegisterUser.as_view(), name='register'),
                path('login/', LoginUser.as_view(), name='login'),
                path('logout/', logout_user, name='logout'),
-               path('search/', search, name='search')
+               path('search/', search, name='search'),
+               path('api/', include(router.urls), name='api'),
+               path('api_auth/', include('rest_framework.urls'))
 ]

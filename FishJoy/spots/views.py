@@ -5,8 +5,14 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 
+from rest_framework import generics, viewsets, mixins
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+
 from .forms import *
 from .models import *
+from .serializer import *
 from .utils import DataMixin
 
 
@@ -202,3 +208,43 @@ def search(request):
         context['data'] = [*spots_data, *fish_data, *bait_data]
 
     return render(request, 'spots/search.html', context)
+
+
+# Django REST Framework
+
+class SpotsViewSet(viewsets.ModelViewSet):
+    queryset = Spots.objects.all()
+    serializer_class = SpotsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    @action(methods=['get', 'put', 'update', 'retrieve', 'delete'], detail=False)
+    def categories(self, request):
+        cats = SpotCategory.objects.all()
+        return Response({'cats': [c.name for c in cats]})
+
+    @action(methods=['get', 'put', 'update', 'retrieve', 'delete'], detail=True)
+    def category(self, request, pk=None):
+        cat = SpotCategory.objects.get(pk=pk)
+        return Response({'cat': cat.name})
+
+
+class FishViewSet(viewsets.ModelViewSet):
+    queryset = Fish.objects.all()
+    serializer_class = FishSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    @action(methods=['get', 'put', 'update', 'retrieve', 'delete'], detail=False)
+    def categories(self, request):
+        cats = FishCategory.objects.all()
+        return Response({'cats': [c.name for c in cats]})
+
+    @action(methods=['get', 'put', 'update', 'retrieve', 'delete'], detail=True)
+    def category(self, request, pk=None):
+        cat = FishCategory.objects.get(pk=pk)
+        return Response({'cat': cat.name})
+
+
+class BaitsViewSet(viewsets.ModelViewSet):
+    queryset = Baits.objects.all()
+    serializer_class = BaitsSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
@@ -25,6 +26,13 @@ class Spots(models.Model):
     spot_category = models.ForeignKey('SpotCategory', on_delete=models.PROTECT)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
+    likes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    dislikes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+    def calculate_rating(self):
+        total = self.likes + self.dislikes
+        return round(10 * (self.likes / total))
 
     def __str__(self):
         return self.title
@@ -34,6 +42,9 @@ class Spots(models.Model):
 
     def get_absolute_url(self):
         return reverse('spot', kwargs={'spot_slug': self.slug})
+
+    def get_edit_url(self):
+        return reverse('spots-detail', args=[self.pk])
 
     class Meta:
         verbose_name = 'Spot'
@@ -50,6 +61,7 @@ class Fish(models.Model):
     fish_category = models.ForeignKey('FishCategory', on_delete=models.PROTECT)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -59,6 +71,9 @@ class Fish(models.Model):
 
     def get_absolute_url(self):
         return reverse('single_fish', kwargs={'single_fish_slug': self.slug})
+
+    def get_edit_url(self):
+        return reverse('fish-detail', args=[self.pk])
 
     class Meta:
         verbose_name = 'Fish'
@@ -73,6 +88,7 @@ class Baits(models.Model):
     price = models.FloatField(validators=[MaxValueValidator(100000), MinValueValidator(0)])
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -80,8 +96,8 @@ class Baits(models.Model):
     def class_name(self):
         return self.__class__.__name__
 
-    # def get_absolute_url(self):
-    #     return reverse('bait', kwargs={'bait_slug': self.slug})
+    def get_edit_url(self):
+        return reverse('baits-detail', args=[self.pk])
 
     class Meta:
         verbose_name = 'Bait'

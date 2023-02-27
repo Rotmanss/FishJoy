@@ -7,11 +7,12 @@ about = {'button': 'About', 'url_button': 'about'}
 
 sidebar = [{'button': 'Spots', 'url_button': 'home'},
            {'button': 'Fish', 'url_button': 'fish'},
-           {'button': 'Baits', 'url_button': 'baits'}]
+           {'button': 'Baits', 'url_button': 'baits'},
+           {'button': 'API', 'url_button': 'api-root'}]
 
 
 class DataMixin:
-    paginate_by = 2
+    paginate_by = 3
 
     def get_user_context(self, **kwargs):
         context = kwargs

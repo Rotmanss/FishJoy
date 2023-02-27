@@ -13,8 +13,16 @@
 
         {% if b.photo %}
             <p><img class="article-image" src="{{ b.photo.url }}" alt="Bait photo"></p>
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser or object.user == request.user %}
+                    <p class="edit"><a href="{{ b.get_edit_url }}">Edit</a></p>
+                {% else %}
+                    <p class="edit"><a href="{% url 'login' %}">Login from admin or owner of this post to edit!</a></p>
+                {% endif %}
+            {% else %}
+                <p class="edit"><a href="{% url 'login' %}">Login to edit!</a></p>
+            {% endif %}
         {% endif %}
-
         <h2 class="title">{{ b.name|capfirst }}</h2>
 
         {% autoescape on %}

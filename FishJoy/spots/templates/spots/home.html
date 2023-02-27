@@ -13,8 +13,8 @@
     {% for s in spots %}
     <li>
         <div class="article-panel">
-            <p class="first">Rating: {{ s.rating }} / 10</p>
             <p class="last">Updated on: {{s.time_update|date:"d-m-Y H:i:s"}}</p>
+            <p class="first">Rating: {{ s.rating }} / 10</p>
         </div>
 
         {% if s.photo %}
@@ -29,6 +29,15 @@
             <p class="description"><i>The deepest point</i>: {{ s.max_depth|floatformat }} meter{{ s.max_depth|floatformat|pluralize }}</p>
 	    {% endautoescape %}
 
+        <div class="clear"></div>
+        <form class="voting" method="POST" action="{% url 'like_action' s.slug %}">
+            {% csrf_token %}
+            <button class="like-button"><img src="/static/spots/images/like.png"></button>
+        </form>
+        <form class="voting" method="POST" action="{% url 'dislike_action' s.slug %}">
+            {% csrf_token %}
+            <button class="dislike-button"><img src="/static/spots/images/dislike.png"></button>
+        </form>
         <div class="clear"></div>
         <p class="link-read-post"><a href="{{ s.get_absolute_url }}">See full information</a></p>
     </li>

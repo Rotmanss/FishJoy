@@ -113,6 +113,42 @@ div.article-panel p.first {
     float: left;
 }
 
+.voting {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.voting img {
+    width: 20px;
+}
+
+.like-button {
+    border: 0;
+    border-radius: 20%;
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0);
+    cursor: pointer;
+}
+
+.dislike-button {
+    border: 0;
+    border-radius: 20%;
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.like-button:hover {
+    transform: scale(1.1);
+}
+
+.dislike-button:hover {
+    transform: scale(1.1);
+}
+
 div.article-panel p.last {
     margin: 0;
     float: right;
@@ -204,6 +240,28 @@ ul.mainmenu li a:hover {
 h1.single-spot {
     margin-bottom: 20px;
     padding: 5px;
+    display: inline-block;
+}
+
+p.edit {
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    float: right;
+}
+
+p.edit a {
+    padding: 10px 20px 10px 20px;
+    background: #042331;
+    color: white;
+    font-size: 20px;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    border-bottom: 1px solid black;
+    transition: .3s;
+}
+
+p.edit a:hover {
+    color: #ffb700;
 }
 
 img.single-spot-photo {

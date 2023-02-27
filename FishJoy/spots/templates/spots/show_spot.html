@@ -2,7 +2,17 @@
 
 {% block content %}
 
+
 <h1 class="single-spot">{{ spot.title }}</h1>
+{% if request.user.is_authenticated %}
+    {% if request.user.is_superuser or object.user == request.user %}
+        <p class="edit"><a href="{{ spot.get_edit_url }}">Edit</a></p>
+    {% else %}
+        <p class="edit"><a href="{% url 'login' %}">Login from admin or owner of this post to edit!</a></p>
+    {% endif %}
+{% else %}
+    <p class="edit"><a href="{% url 'login' %}">Login to edit!</a></p>
+{% endif %}
 
 {% if spot.photo %}
     <p><img class="single-spot-photo" src="{{ spot.photo.url }}" alt="Spot photo"></p>

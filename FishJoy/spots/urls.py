@@ -5,10 +5,9 @@ from .views import *
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'spots', SpotsViewSet)
-router.register(r'fish', FishViewSet)
-router.register(r'baits', BaitsViewSet)
-
+router.register(r'spots', SpotsViewSet, basename='spots')
+router.register(r'fish', FishViewSet, basename='fish')
+router.register(r'baits', BaitsViewSet, basename='baits')
 
 urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('fish/', ShowFish.as_view(), name='fish'),
@@ -25,6 +24,8 @@ urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('login/', LoginUser.as_view(), name='login'),
                path('logout/', logout_user, name='logout'),
                path('search/', search, name='search'),
+               path('like_action/<slug:spot_slug>/', like_action, name='like_action'),
+               path('dislike_action/<slug:spot_slug>/', dislike_action, name='dislike_action'),
                path('api/', include(router.urls), name='api'),
                path('api_auth/', include('rest_framework.urls'))
 ]

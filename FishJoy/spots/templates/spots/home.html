@@ -5,9 +5,17 @@
     {% for c in spots_category %}
         <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
     {% endfor %}
+    <header>Export</header>
+    <li><a href="{% url 'spots_xml_export' %}">Get XML</a></li>
+    <li><a href="{% url 'spots_xlsx_export' %}">Get XLSX</a></li>
 {% endblock %}
 
 {% block content %}
+<!--<form method="post" enctype="multipart/form-data" action="{% url 'home' %}">-->
+<!--  {% csrf_token %}-->
+<!--  <input type="file" name="file">-->
+<!--  <button type="submit">Upload</button>-->
+<!--</form>-->
 
 <ul class="list-articles">
     {% for s in spots %}
@@ -38,6 +46,9 @@
             {% csrf_token %}
             <button class="dislike-button"><img src="/static/spots/images/dislike.png"></button>
         </form>
+        {% if not request.user.is_authenticated %}
+            <p class="add-auth"><a href="{% url 'login' %}">*Login to evaluate a spot!</a></p>
+        {% endif %}
         <div class="clear"></div>
         <p class="link-read-post"><a href="{{ s.get_absolute_url }}">See full information</a></p>
     </li>

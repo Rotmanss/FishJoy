@@ -16,6 +16,9 @@
 
         {% block sidebar %}
         {% endblock %}
+        <header>Diagrams</header>
+        <li><a href="{% url 'create_spots_diagram' %}">Spot diagram</a></li>
+        <li><a href="{% url 'create_fish_diagram' %}">Fish diagram</a></li>
     </ul>
 </div>
 
@@ -27,6 +30,7 @@
                     <li><div class="logo"><a href="{% url 'home' %}">Fish Joy</a></div></li>
                     <li>{% block add %}<a href="{% url 'add_spot' %}">Add spot</a>{% endblock %}</li>
                     <li><a href="{% url about.url_button %}">{{ about.button }}</a></li>
+                    <li><a href="{% url feedback.url_button %}">{{ feedback.button }}</a></li>
                     <li>
                         <form class="search-bar" action="{% url 'search' %}" method="post" enctype="multipart/form-data" autocomplete="off">
                             {% csrf_token %}

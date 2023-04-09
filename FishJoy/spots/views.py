@@ -1,20 +1,36 @@
+import io
+import os
+from datetime import datetime
+
+from django.apps import apps
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
+from django.core.files import File
+from django.db.models import Count, F, IntegerField
+from django.db.models.functions import Cast
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.utils.datastructures import MultiValueDictKeyError
+from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.core import serializers as ser
+from matplotlib import ticker
 
 from rest_framework import generics, viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from FishJoy.settings import BASE_DIR
 from .forms import *
 from .models import *
 from .permissions import IsOwnerOrAdmin
 from .serializer import *
 from .utils import DataMixin
+
+import openpyxl as xl
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def pageNotFound(request, exception):
@@ -130,6 +146,10 @@ class AddSpot(DataMixin, CreateView):
         c_def = self.get_user_context(title='Add spot')
         return {**context, **c_def}
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 class AddFish(DataMixin, CreateView):
     form_class = AddFishForm
@@ -141,6 +161,10 @@ class AddFish(DataMixin, CreateView):
         c_def = self.get_user_context(title='Add fish')
         return {**context, **c_def}
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 class AddBait(DataMixin, CreateView):
     form_class = AddBaitForm
@@ -151,6 +175,10 @@ class AddBait(DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Add bait')
         return {**context, **c_def}
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -212,28 +240,30 @@ def search(request):
 
 
 def like_action(request, spot_slug):
-    mixin = DataMixin()
     current_url = request.META.get('HTTP_REFERER')
-
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated:
         spot = get_object_or_404(Spots, slug=spot_slug)
-        spot.likes += 1
-        spot.save()
-        spot.rating = spot.calculate_rating()
-        spot.save()
+        if request.user.username not in str(spot.liked_by.all()):
+            spot.likes += 1
+            spot.liked_by.add(request.user.id)
+            spot.dislikes -= 1 if request.user.username in str(spot.disliked_by.all()) else 0
+            spot.disliked_by.remove(request.user.id) if request.user.username in str(spot.disliked_by.all()) else None
+            spot.rating = spot.calculate_rating()
+            spot.save()
     return redirect(current_url)
 
 
 def dislike_action(request, spot_slug):
-    mixin = DataMixin()
     current_url = request.META.get('HTTP_REFERER')
-
-    if request.method == 'POST':
-        spot = Spots.objects.get(slug=spot_slug)
-        spot.dislikes += 1
-        spot.save()
-        spot.rating = spot.calculate_rating()
-        spot.save()
+    if request.method == 'POST' and request.user.is_authenticated:
+        spot = get_object_or_404(Spots, slug=spot_slug)
+        if request.user.username not in str(spot.disliked_by.all()):
+            spot.dislikes += 1
+            spot.disliked_by.add(request.user.id)
+            spot.likes -= 1 if request.user.username in str(spot.liked_by.all()) else 0
+            spot.liked_by.remove(request.user.id) if request.user.username in str(spot.liked_by.all()) else None
+            spot.rating = spot.calculate_rating()
+            spot.save()
     return redirect(current_url)
 
 
@@ -296,3 +326,154 @@ class BaitsViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = (IsAuthenticatedOrReadOnly,)
         return (permission() for permission in permission_classes)
+
+
+class Feedback(DataMixin, CreateView):
+    form_class = FeedbackForm
+    template_name = 'spots/add_form.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Feedback')
+        return {**context, **c_def}
+
+
+def spots_xml_export(request):
+    queryset = Spots.objects.all()
+    xml_data = ser.serialize('xml', queryset, indent=4)
+
+    response = HttpResponse(xml_data, content_type='text/xml')
+    response['Content-Disposition'] = 'attachment; filename="spots.xml"'
+    return response
+
+
+def fish_xml_export(request):
+    queryset = Fish.objects.all()
+    xml_data = ser.serialize('xml', queryset, indent=4)
+
+    response = HttpResponse(xml_data, content_type='text/xml')
+    response['Content-Disposition'] = 'attachment; filename="fish.xml"'
+    return response
+
+
+def baits_xml_export(request):
+    queryset = Baits.objects.all()
+    xml_data = ser.serialize('xml', queryset, indent=4)
+
+    response = HttpResponse(xml_data, content_type='text/xml')
+    response['Content-Disposition'] = 'attachment; filename="baits.xml"'
+    return response
+
+
+def spots_xlsx_export(request):
+    spots = Spots.objects.all()
+
+    wb = xl.Workbook()
+    ws = wb.active
+
+    ws.append(['pk', 'title', 'slug', 'rating', 'location', 'photo', 'max_depth', 'fish', 'spot_category', 'time_create', 'time_update', 'likes', 'dislikes',
+              'user', 'liked_by', 'disliked_by'])
+
+    for spot in spots:
+        fish = ", ".join([str(f) for f in spot.fish.all()])
+        liked_by = ", ".join([str(l) for l in spot.liked_by.all()])
+        disliked_by = ", ".join([str(d) for d in spot.disliked_by.all()])
+        ws.append([spot.pk, spot.title, spot.slug, spot.rating, spot.location, str(spot.photo), spot.max_depth, fish, str(spot.spot_category), str(spot.time_create), str(spot.time_update),
+                   spot.likes, spot.dislikes, str(spot.user), liked_by, disliked_by])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="spots.xlsx"'
+    wb.save(response)
+
+    return response
+
+
+def fish_xlsx_export(request):
+    fish = Fish.objects.all()
+
+    wb = xl.Workbook()
+    ws = wb.active
+
+    ws.append(['pk', 'name', 'slug', 'photo', 'average_weight', 'baits', 'fish_category', 'time_create', 'time_update', 'user'])
+
+    for f in fish:
+        bait = ", ".join([str(b) for b in f.baits.all()])
+        ws.append([f.pk, f.name, f.slug, str(f.photo), f.average_weight, bait, str(f.fish_category), str(f.time_create), str(f.time_update),
+                   str(f.user)])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="fish.xlsx"'
+    wb.save(response)
+
+    return response
+
+
+def baits_xlsx_export(request):
+    baits = Baits.objects.all()
+
+    wb = xl.Workbook()
+    ws = wb.active
+
+    ws.append(['pk', 'name', 'slug', 'photo', 'price', 'time_create', 'time_update', 'user'])
+
+    for bait in baits:
+        ws.append([bait.pk, bait.name, bait.slug, str(bait.photo), bait.price, str(bait.time_create), str(bait.time_update), str(bait.user)])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="baits.xlsx"'
+    wb.save(response)
+
+    return response
+
+
+def create_spots_diagram(request):
+    mixin = DataMixin()
+    context = mixin.get_user_context(title='Spots diagram')
+
+    spots = Spots.objects.values('spot_category').annotate(count=Count('id'))
+    spots = spots.annotate(id_count=Cast('count', output_field=IntegerField()))
+
+    df = pd.DataFrame(list(spots), columns=['spot_category', 'id_count'])
+    df = df.sort_values(by='spot_category', ascending=True)
+
+    category_ids = list(df['spot_category'])
+    categories = SpotCategory.objects.filter(id__in=category_ids).order_by('id').values_list('name', flat=True)
+    plt.xlabel('Category')
+    plt.ylabel('Number of records')
+    plt.title('Number of records per category')
+    plt.yticks(range(0, int(df['id_count'].max())+1))
+
+    plt.bar(categories, df['id_count'])
+
+    directory = os.path.join(BASE_DIR, 'spots/static/spots/images')
+    plt.savefig(os.path.join(directory, 'spots_bar.png'))
+
+    context['spots_diagram'] = '/static/spots/images/spots_bar.png'
+
+    return render(request, 'spots/diagram.html', context=context)
+
+
+def create_fish_diagram(request):
+    mixin = DataMixin()
+    context = mixin.get_user_context(title='Fish diagram')
+
+    fish = Fish.objects.values('fish_category').annotate(Count('id'))
+    df = pd.DataFrame(list(fish), columns=['fish_category', 'id__count'])
+    df = df.sort_values(by='fish_category', ascending=True)
+
+    category_ids = list(df['fish_category'])
+    categories = FishCategory.objects.filter(id__in=category_ids).order_by('id').values_list('name', flat=True)
+
+    plt.xlabel('Category')
+    plt.ylabel('Number of records')
+    plt.title('Number of records per category')
+    plt.yticks(range(0, int(df['id__count'].max())+1))
+    plt.bar(categories, df['id__count'])
+
+    directory = os.path.join(BASE_DIR, 'spots/static/spots/images')
+    plt.savefig(os.path.join(directory, 'fish_bar.png'))
+
+    context['fish_diagram'] = '/static/spots/images/fish_bar.png'
+
+    return render(request, 'spots/diagram.html', context=context)

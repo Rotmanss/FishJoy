@@ -8,17 +8,16 @@ class SpotsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spots
         fields = '__all__'
-        read_only_fields = ['likes', 'dislikes']
+        read_only_fields = ['likes', 'dislikes', 'liked_by', 'disliked_by']
         extra_kwargs = {
-            'photo': {'required': True},
-            'rating': {'required': True}
+            'photo': {'required': True}
         }
 
     def get_extra_kwargs(self):
         extra_kwargs = super().get_extra_kwargs()
         if self.context['request'].method == 'PUT':
             extra_kwargs['photo']['required'] = False
-
+            self.Meta.read_only_fields += ['rating']
         return extra_kwargs
 
 

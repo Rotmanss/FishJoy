@@ -1,0 +1,17 @@
+{% extends 'spots/base.html' %}
+
+{% block sidebar %}
+    <header>Categories</header>
+    {% for c in spots_category %}
+        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+{% if spots_diagram %}
+    <img src="{{ spots_diagram }}">
+{% elif fish_diagram %}
+    <img src="{{ fish_diagram }}">
+{% endif %}
+
+{% endblock %}

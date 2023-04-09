@@ -11,6 +11,15 @@ html, body {
     font-family: Arial;
 }
 
+::-webkit-scrollbar {
+    width: 0.3em;
+    height: 0.3em;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
 .wrapper {
     height: 100%;
     width: 100%;
@@ -43,7 +52,6 @@ html, body {
     margin-left: 210px;
 
     background: rgba(159, 157, 157, 0.43);
-    border-radius: 0 0 20px 20px;
     padding: 5px;
     color: #3d3d3d;
     font-size: 11px;
@@ -61,6 +69,7 @@ html, body {
     width: 210px;
     height: 100%;
     background: #042331;
+    overflow-y: auto;
 }
 
 .sidebar header {
@@ -202,7 +211,7 @@ p.description i {
 ul.mainmenu li div.logo a {
     padding: 0;
     width: 120px;
-    margin-right: 60px;
+    margin-right: 10px;
     font-family: Monotype Corsiva, Tahoma, Arial;
     font-size: 40px;
     color: black;
@@ -218,7 +227,7 @@ ul.mainmenu {
 
 ul.mainmenu li {
     float: left;
-    margin: 10px 30px 0 40px;
+    margin: 10px 25px 0 35px;
 }
 
 ul.mainmenu li.last {
@@ -453,7 +462,7 @@ p.add-auth a:hover {
 
 form.search-bar {
     width: 100% ;
-    padding: 7px 20px;
+    padding: 7px 10px;
     background: rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
@@ -479,6 +488,7 @@ form.search-bar button img {
 }
 
 form.search-bar button {
+    margin-left: -50px;
     border: 0;
     border-radius: 50%;
     width: 25px;

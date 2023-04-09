@@ -29,6 +29,8 @@ class Spots(models.Model):
     likes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     dislikes = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    liked_by = models.ManyToManyField(get_user_model(), related_name='liked_spots', blank=True)
+    disliked_by = models.ManyToManyField(get_user_model(), related_name='disliked_spots', blank=True)
 
     def calculate_rating(self):
         total = self.likes + self.dislikes
@@ -134,4 +136,18 @@ class FishCategory(models.Model):
     class Meta:
         verbose_name = 'Fish category'
         verbose_name_plural = 'Fish categories'
+        ordering = ['name']
+
+
+class Feedback(models.Model):
+    name = models.CharField(max_length=50, db_index=True)
+    email = models.EmailField(max_length=50, db_index=True)
+    subject = models.TextField(max_length=1000)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Feedback'
+        verbose_name_plural = 'Feedback'
         ordering = ['name']

@@ -26,6 +26,16 @@ urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('search/', search, name='search'),
                path('like_action/<slug:spot_slug>/', like_action, name='like_action'),
                path('dislike_action/<slug:spot_slug>/', dislike_action, name='dislike_action'),
+               path('feedback/', Feedback.as_view(), name='feedback'),
                path('api/', include(router.urls), name='api'),
-               path('api_auth/', include('rest_framework.urls'))
+               path('api_auth/', include('rest_framework.urls')),
+               path('spots_xml_export/', spots_xml_export, name='spots_xml_export'),
+               path('fish_xml_export/', fish_xml_export, name='fish_xml_export'),
+               path('baits_xml_export/', baits_xml_export, name='baits_xml_export'),
+               path('spots_xlsx_export/', spots_xlsx_export, name='spots_xlsx_export'),
+               path('fish_xlsx_export/', fish_xlsx_export, name='fish_xlsx_export'),
+               path('baits_xlsx_export/', baits_xlsx_export, name='baits_xlsx_export'),
+               # path('spots_import', spots_import, name='spots_import')
+               path('create_spots_diagram/', create_spots_diagram, name='create_spots_diagram'),
+               path('create_fish_diagram/', create_fish_diagram, name='create_fish_diagram'),
 ]

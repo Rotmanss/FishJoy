@@ -14,10 +14,18 @@ class AddSpotForm(forms.ModelForm):
     class Meta:
         model = Spots
         fields = '__all__'
+        exclude = ['likes', 'dislikes', 'user', 'liked_by', 'disliked_by']
         widgets = {'title': forms.TextInput(attrs={'class': 'form-input'}),
                    'slug': forms.TextInput(attrs={'class': 'form-input'}),
                    'location': forms.TextInput(attrs={'class': 'form-input'}),
                    'max_depth': forms.TextInput(attrs={'class': 'form-input'})}
+
+    def save(self, commit=True, user=None):
+        instance = super().save(commit=False)
+        if user:
+            instance.user = user
+        instance.save()
+        return instance
 
 
 class AddFishForm(forms.ModelForm):
@@ -28,16 +36,32 @@ class AddFishForm(forms.ModelForm):
     class Meta:
         model = Fish
         fields = '__all__'
+        exclude = ['user']
         widgets = {'name': forms.TextInput(attrs={'class': 'form-input'}),
                    'slug': forms.TextInput(attrs={'class': 'form-input'})}
+
+    def save(self, commit=True, user=None):
+        instance = super().save(commit=False)
+        if user:
+            instance.user = user
+        instance.save()
+        return instance
 
 
 class AddBaitForm(forms.ModelForm):
     class Meta:
         model = Baits
         fields = '__all__'
+        exclude = ['user']
         widgets = {'name': forms.TextInput(attrs={'class': 'form-input'}),
                    'slug': forms.TextInput(attrs={'class': 'form-input'})}
+
+    def save(self, commit=True, user=None):
+        instance = super().save(commit=False)
+        if user:
+            instance.user = user
+        instance.save()
+        return instance
 
 
 class RegisterUserForm(UserCreationForm):
@@ -54,3 +78,22 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(max_length=50, label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = '__all__'
+        widgets = {'name': forms.TextInput(attrs={'class': 'form-input'}),
+                   'email': forms.TextInput(attrs={'class': 'form-input'})}
+
+
+# FORMAT_CHOICES = (
+#     ('xls', 'xls'),
+#     ('csv', 'csv'),
+#     ('json', 'json')
+# )
+
+
+# class FormatForm(forms.Form):
+#     format = forms.ChoiceField(choices=FORMAT_CHOICES, widget=forms.TextInput(attrs={'class': 'form-input'}))

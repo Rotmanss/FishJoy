@@ -22,8 +22,13 @@ class FishCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
 
 
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'email', 'subject')
+
+
 admin.site.register(Spots, SpotsAdmin)
 admin.site.register(Fish, FishAdmin)
 admin.site.register(Baits, BaitsAdmin)
 admin.site.register(SpotCategory, SpotCategoryAdmin)
 admin.site.register(FishCategory, FishCategoryAdmin)
+admin.site.register(Feedback, FeedbackAdmin)

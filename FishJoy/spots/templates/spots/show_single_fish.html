@@ -7,9 +7,9 @@
 <h1 class="single-spot">{{ fish.name }}</h1>
 {% if request.user.is_authenticated %}
     {% if request.user.is_superuser or object.user == request.user %}
-        <p class="edit"><a href="{{ fish.get_edit_url }}">Edit</a></p>
+        <p class="edit"><a href="{{ fish.get_edit_url }}">Edit / Delete</a></p>
     {% else %}
-        <p class="edit"><a href="{% url 'login' %}">Login from admin or owner of this post to edit!</a></p>
+        <p class="edit"><a href="{% url 'login' %}">Login from admin or owner of this post to edit / delete!</a></p>
     {% endif %}
 {% else %}
     <p class="edit"><a href="{% url 'login' %}">Login to edit!</a></p>

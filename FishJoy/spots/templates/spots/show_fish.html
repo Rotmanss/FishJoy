@@ -7,6 +7,9 @@
     {% for c in fish_category %}
         <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
     {% endfor %}
+    <header>Export</header>
+    <li><a href="{% url 'fish_xml_export' %}">Get XML</a></li>
+    <li><a href="{% url 'fish_xlsx_export' %}">Get XLSX</a></li>
 {% endblock %}
 
 {% block content %}

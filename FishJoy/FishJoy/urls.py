@@ -23,7 +23,9 @@ from spots.views import pageNotFound
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('spots.urls'))
+    path('', include('spots.urls')),
+    path('', include('weather.urls')),
+    path('', include('map.urls'))
 ]
 
 if settings.DEBUG:

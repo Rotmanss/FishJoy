@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'spots.apps.SpotsConfig',
     'rest_framework',
-    'import_export'
+    'import_export',
+    'weather',
+    'map'
 ]
 
 MIDDLEWARE = [

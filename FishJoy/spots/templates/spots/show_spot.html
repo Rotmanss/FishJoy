@@ -14,6 +14,9 @@
     <p class="edit"><a href="{% url 'login' %}">Login to edit / delete!</a></p>
 {% endif %}
 
+<p class="edit"><a href="/weather?loca={{ spot.location }}">Weather</a></p>
+<p class="edit"><a href="/map?spot={{ spot.location }}">On map&nbsp;</a></p>
+
 {% if spot.photo %}
     <p><img class="single-spot-photo" src="{{ spot.photo.url }}" alt="Spot photo"></p>
 {% endif %}

@@ -1,0 +1,59 @@
+{% extends 'spots/base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link type="text/css" href="{% static 'weather/css/style.css' %}" rel="stylesheet" />
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="page">
+        <div class="content">
+            {% block content %}
+
+            {% if error %}
+                <h2 align="center">Unfortunately it is impossible to get weather information on "{{ location }}". Make sure you have provided
+                    correct location for this spot!</h2>
+            {% else %}
+                <div class="weather-container">
+                    <h1>{{ location|capfirst }}</h1>
+                    <h2>{{ day }}</h2>
+                    <div class="weather-current">
+                        <img class="weather-img" src='https://openweathermap.org/img/w/{{ icon }}.png'>
+                        <div class="weather-description">
+                            <h3>{{ description|capfirst }}</h3>
+                            <p>Temperature: {{ temp }} °C</p>
+                            <p>Pressure: {{ pressure }} mb</p>
+                            <p>Humidity: {{ humidity }} %</p>
+                            <p>Wind Speed: {{ wind }} km/h</p>
+                        </div>
+                    </div>
+                    <h2>Forecast for the next few days:</h2>
+                    <div class="weather-forecast">
+                        {% for forecast in forecasts %}
+                            <div class="weather-forecast-item">
+                                <p>{{ forecast.date }}</p>
+                                <p>{{ forecast.time }}</p>
+                                <img src='https://openweathermap.org/img/w/{{ forecast.icon }}.png'>
+                                <div class="weather-forecast-description">
+                                    <p>{{ forecast.description|capfirst }}</p>
+                                    <p>Temperature: {{ forecast.temp }} °C</p>
+                                    <p>Wind Speed: {{ forecast.wind }} km/h</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,3 +1,6 @@
+@import url('/static/weather/css/style.css');
+@import url('/static/map/css/style.css');
+
 * {
     margin: 0;
     padding: 0;
@@ -257,6 +260,7 @@ p.edit {
     margin-top: 10px;
     margin-bottom: 20px;
     float: right;
+    clear: both;
 }
 
 p.edit a {
@@ -480,7 +484,7 @@ form.search-bar input{
 }
 
 ::placeholder {
-    color: #4e0c79
+    color: #4e0c79;
 }
 
 form.search-bar button img {

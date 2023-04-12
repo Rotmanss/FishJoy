@@ -1,0 +1,33 @@
+{% extends 'spots/base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link type="text/css" href="{% static 'map/css/style.css' %}" rel="stylesheet" />
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="page">
+        <div class="content">
+            {% block content %}
+
+            {% if error %}
+                <h2 align="center">Unfortunately it is impossible to find "{{ location }}" on map. Make sure you have provided
+                    correct location for this spot!</h2>
+            {% else %}
+                {% autoescape off %}
+                    <div id="map">{{ map }}</div>
+                {% endautoescape %}
+            {% endif %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

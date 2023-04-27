@@ -1,5 +1,6 @@
 @import url('/static/weather/css/style.css');
 @import url('/static/map/css/style.css');
+@import "query_tool.css";
 
 * {
     margin: 0;

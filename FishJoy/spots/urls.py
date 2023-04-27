@@ -38,4 +38,5 @@ urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('baits_xlsx_export/', baits_xlsx_export, name='baits_xlsx_export'),
                path('create_spots_diagram/', create_spots_diagram, name='create_spots_diagram'),
                path('create_fish_diagram/', create_fish_diagram, name='create_fish_diagram'),
+               path('query_tool/', query_tool, name='query_tool')
 ]

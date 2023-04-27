@@ -6,6 +6,7 @@ from django.apps import apps
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.core.files import File
+from django.db import connection
 from django.db.models import Count, F, IntegerField
 from django.db.models.functions import Cast
 from django.forms import model_to_dict
@@ -239,6 +240,24 @@ def search(request):
         context['data'] = [*spots_data, *fish_data, *bait_data]
 
     return render(request, 'spots/search.html', context)
+
+
+def query_tool(request):
+    mixin = DataMixin()
+    context = mixin.get_user_context(title='Query tool')
+    query = request.POST.get('query', '')
+
+    if request.method == 'POST' and query != '':
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+
+        context['query'] = query
+        context['result'] = result
+        context['headers'] = columns
+
+    return render(request, 'spots/query_tool.html', context)
 
 
 def like_action(request, spot_slug):

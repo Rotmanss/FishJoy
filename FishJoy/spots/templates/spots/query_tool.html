@@ -1,0 +1,41 @@
+{% extends 'spots/base.html' %}
+
+{% block content %}
+{% if request.user.is_superuser %}
+    <form action="{% url 'query_tool' %}" method="post" enctype="multipart/form-data" autocomplete="off" class="query-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="search" placeholder="Your query" aria-label="Your query" name="query" class="form-control">
+            <button type="submit" class="btn btn-primary">Go</button>
+        </div>
+    </form>
+
+    {% if query %}
+        <h2 align="center" style="margin-top: 30px;">Your last query:</h2>
+        <div class="query-results">
+            <h2>{{ query }}</h2>
+        </div>
+
+        <table class="query-results-table">
+            <thead>
+                <tr>
+                    {% for h in headers %}
+                        <th>{{ h }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in result %}
+                    <tr>
+                        {% for value in row %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% else %}
+<h2 align="center" style="color: red">This page accessible only for admin or superuser</h2>
+{% endif %}
+{% endblock %}

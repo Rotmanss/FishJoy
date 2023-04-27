@@ -9,7 +9,8 @@ feedback = {'button': 'Feedback', 'url_button': 'feedback'}
 sidebar = [{'button': 'Spots', 'url_button': 'home'},
            {'button': 'Fish', 'url_button': 'fish'},
            {'button': 'Baits', 'url_button': 'baits'},
-           {'button': 'API', 'url_button': 'api-root'}]
+           {'button': 'API', 'url_button': 'api-root'},
+           {'button': 'Query tool', 'url_button': 'query_tool'}]
 
 
 class DataMixin:

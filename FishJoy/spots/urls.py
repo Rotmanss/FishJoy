@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 router.register(r'spots', SpotsViewSet, basename='spots')
 router.register(r'fish', FishViewSet, basename='fish')
 router.register(r'baits', BaitsViewSet, basename='baits')
+router.register(r'postman', PostmanSet, basename='postman')
 
 urlpatterns = [path('', FisherHome.as_view(), name='home'),
                path('fish/', ShowFish.as_view(), name='fish'),

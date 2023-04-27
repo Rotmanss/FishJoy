@@ -8,6 +8,7 @@ from django.contrib.auth.views import LoginView
 from django.core.files import File
 from django.db.models import Count, F, IntegerField
 from django.db.models.functions import Cast
+from django.forms import model_to_dict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
@@ -17,6 +18,7 @@ from django.core import serializers as ser
 from matplotlib import ticker
 
 from rest_framework import generics, viewsets, mixins, status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -326,6 +328,12 @@ class BaitsViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = (IsAuthenticatedOrReadOnly,)
         return (permission() for permission in permission_classes)
+
+
+class PostmanSet(viewsets.ModelViewSet):
+    queryset = SpotCategory.objects.all()
+    serializer_class = PostmanS
+# END
 
 
 class Feedback(DataMixin, CreateView):

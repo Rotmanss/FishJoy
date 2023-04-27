@@ -53,3 +53,9 @@ class BaitsSerializer(serializers.ModelSerializer):
         if self.context['request'].method == 'PUT':
             extra_kwargs['photo']['required'] = False
         return extra_kwargs
+
+
+class PostmanS(serializers.ModelSerializer):
+    class Meta:
+        model = SpotCategory
+        fields = '__all__'

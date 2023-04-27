@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'FishJoy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'spots',
         'USER': 'postgres',
         'PASSWORD': 'asdasd123123',
@@ -90,16 +90,16 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'spots',
-#         'USER': 'postgres',
-#         'PASSWORD': 'asdasd123123',
-#         'HOST': 'spots_db',
-#         'PORT': 5432,
-#     }
-# }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'spots',
+#        'USER': 'postgres',
+#        'PASSWORD': 'asdasd123123',
+#        'HOST': 'spots_db',
+#        'PORT': 5432,
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -126,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Kyiv'
-# TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -147,7 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 3
+    'PAGE_SIZE': 5,
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

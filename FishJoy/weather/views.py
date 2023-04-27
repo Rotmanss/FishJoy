@@ -78,4 +78,3 @@ def weather(request):
         'forecasts': forecast,
     }
     return render(request, 'weather/weather.html', context=context)
-

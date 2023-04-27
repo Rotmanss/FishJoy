@@ -8,5 +8,7 @@ You can divide fish and spots on particular categories, like peaceful or predato
 If you have something to share or offer, you can easily do that by filling the form. If you do a mistake when added spot/fish/bait and
 want to change it, just press the button edit/delete on the page of full information about spot/fish/bait.
 You can modify or delete only spots/fish/baits that you own.
+
 For extra questions you can text on romanromapev@gmail.com.
+
 Important: you have to be authorized to fill the form!

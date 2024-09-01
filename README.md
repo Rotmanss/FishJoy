@@ -9,6 +9,8 @@ If you have something to share or offer, you can easily do that by filling the f
 want to change it, just press the button edit/delete on the page of full information about spot/fish/bait.
 You can modify or delete only spots/fish/baits that you own.
 
+Telegram bot extension : https://github.com/Rotmanss/FishJoy_Bot
+
 For extra questions you can text on romanromapev@gmail.com.
 
 Important: you have to be authorized to fill the form!

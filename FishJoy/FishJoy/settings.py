@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-jrt$1p$fi_*#$!y(lo=ml18xwee8j#d6=^si6zsomu8ir97tn%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -79,27 +79,29 @@ WSGI_APPLICATION = 'FishJoy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'spots',
-        'USER': 'postgres',
-        'PASSWORD': 'asdasd123123',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
-
+# Local PostgreSQL configuration (for running without Docker)
 #DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
+#       'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #        'NAME': 'spots',
 #        'USER': 'postgres',
 #        'PASSWORD': 'asdasd123123',
-#        'HOST': 'spots_db',
-#        'PORT': 5432,
+#        'HOST': '127.0.0.1',
+#        'PORT': '5432',
 #    }
 #}
+
+# Docker configuration (for running with docker-compose)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'spots',
+        'USER': 'postgres',
+        'PASSWORD': 'asdasd123123',
+        'HOST': 'spots_db',
+        'PORT': 5432,
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -125,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Kyiv'
+TIME_ZONE = 'Europe/Kiev'  # Changed from Europe/Kyiv (not recognized in Python 3.11)
 #TIME_ZONE = 'UTC'
 
 USE_I18N = True

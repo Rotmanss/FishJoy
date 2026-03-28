@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   spots_db:
-    image: postgres
+    image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:

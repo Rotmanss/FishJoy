@@ -6,6 +6,10 @@ __pycache__
 db.sqlite3
 media
 
+# PostgreSQL data directories (Docker runtime data)
+FishJoy/data/db/
+FishJoy/code/db/
+
 # Backup files # 
 *.bak 
 

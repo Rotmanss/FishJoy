@@ -33,6 +33,8 @@ from .utils import DataMixin
 
 import openpyxl as xl
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Set backend before importing pyplot
 import matplotlib.pyplot as plt
 
 
@@ -466,6 +468,13 @@ def create_spots_diagram(request):
 
     category_ids = list(df['spot_category'])
     categories = SpotCategory.objects.filter(id__in=category_ids).order_by('id').values_list('name', flat=True)
+    
+    # Clear any existing plots
+    plt.clf()
+    plt.close('all')
+    
+    # Create new figure
+    plt.figure(figsize=(10, 6))
     plt.xlabel('Category')
     plt.ylabel('Number of records')
     plt.title('Number of records per category')
@@ -473,8 +482,12 @@ def create_spots_diagram(request):
 
     plt.bar(categories, df['id_count'])
 
+    # Ensure directory exists
     directory = os.path.join(BASE_DIR, 'spots/static/spots/images')
-    plt.savefig(os.path.join(directory, 'spots_bar.png'))
+    os.makedirs(directory, exist_ok=True)
+    
+    plt.savefig(os.path.join(directory, 'spots_bar.png'), bbox_inches='tight')
+    plt.close()  # Close the figure to free memory
 
     context['spots_diagram'] = '/static/spots/images/spots_bar.png'
 
@@ -492,14 +505,24 @@ def create_fish_diagram(request):
     category_ids = list(df['fish_category'])
     categories = FishCategory.objects.filter(id__in=category_ids).order_by('id').values_list('name', flat=True)
 
+    # Clear any existing plots
+    plt.clf()
+    plt.close('all')
+    
+    # Create new figure
+    plt.figure(figsize=(10, 6))
     plt.xlabel('Category')
     plt.ylabel('Number of records')
     plt.title('Number of records per category')
     plt.yticks(range(0, int(df['id__count'].max())+1))
     plt.bar(categories, df['id__count'])
 
+    # Ensure directory exists
     directory = os.path.join(BASE_DIR, 'spots/static/spots/images')
-    plt.savefig(os.path.join(directory, 'fish_bar.png'))
+    os.makedirs(directory, exist_ok=True)
+    
+    plt.savefig(os.path.join(directory, 'fish_bar.png'), bbox_inches='tight')
+    plt.close()  # Close the figure to free memory
 
     context['fish_diagram'] = '/static/spots/images/fish_bar.png'
 

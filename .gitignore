@@ -4,7 +4,6 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
 
 # PostgreSQL data directories (Docker runtime data)
 FishJoy/data/db/

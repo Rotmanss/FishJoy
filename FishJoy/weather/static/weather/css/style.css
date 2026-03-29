@@ -67,3 +67,70 @@
   margin: 10px 0;
   font-size: 1.2rem; 
 }
+
+/* Responsive Weather Styles */
+@media screen and (max-width: 768px) {
+  .weather-container {
+    margin: 20px auto;
+    padding: 0 15px;
+    font-size: 1rem;
+  }
+  
+  .weather-current {
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+  
+  .weather-current img {
+    height: 120px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  .weather-description {
+    text-align: center;
+  }
+  
+  .weather-description h3 {
+    font-size: 1.5rem;
+  }
+  
+  .weather-description p {
+    font-size: 1rem;
+  }
+  
+  .weather-forecast {
+    flex-direction: column;
+  }
+  
+  .weather-forecast-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .weather-forecast-item p {
+    font-size: 1rem;
+  }
+  
+  .weather-forecast-description p {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .weather-container {
+    font-size: 0.9rem;
+  }
+  
+  .weather-current img {
+    height: 100px;
+  }
+  
+  .weather-description h3 {
+    font-size: 1.3rem;
+  }
+  
+  .weather-forecast-item img {
+    height: 60px;
+  }
+}

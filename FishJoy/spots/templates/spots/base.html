@@ -3,10 +3,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <link type="text/css" href="{% static 'spots/css/style.css' %}" rel="stylesheet" />
 </head>
 <body>
+<button class="mobile-menu-toggle" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
 <div class="sidebar">
     <header>Select</header>
     <ul>
@@ -82,10 +88,31 @@
     </div>
 
     <div class="footer">
-        <p>&copy; Pevny Roman</p>
+        <p>&copy; Pevnyi Roman</p>
         <p>Offer your spot, fish or bait, for the sake of convenience of other fishers!</p>
         <p>For any questions or suggestions: romanromapev@gmail.com</p>
     </div>
 </div>
+<script>
+// Mobile menu toggle
+const menuToggle = document.querySelector('.mobile-menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+const body = document.body;
+
+menuToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+    body.classList.toggle('menu-open');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+        sidebar.classList.remove('active');
+        menuToggle.classList.remove('active');
+        body.classList.remove('menu-open');
+    }
+});
+</script>
 </body>
 </html>

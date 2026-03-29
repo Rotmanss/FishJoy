@@ -12,7 +12,7 @@ def weather(request):
     # API to find location to get weather data
     location = request.GET.get('loca')
 
-    api_key = 'ad630326c3b14d8e9994e0ec7007379e'
+    api_key = '70cfca58af774dc1b1515d85e564bab9'
     url = f'https://api.opencagedata.com/geocode/v1/json?q={location}&key={api_key}'
 
     response = requests.get(url).json()
